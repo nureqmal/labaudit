@@ -17,6 +17,7 @@ from app.repositories.audit_log_repository import AuditLogRepository
 st.set_page_config(page_title="Admin — LabAudit", page_icon="👤", layout="wide")
 
 user = require_admin()
+inject_theme_css()
 inject_global_css()
 render_sidebar()
 page_header("Admin Panel", "User management, org settings and audit trail", "👤")
