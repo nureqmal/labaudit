@@ -17,6 +17,7 @@ from app.repositories.user_repository import UserRepository
 st.set_page_config(page_title="Training — LabAudit", page_icon="🎓", layout="wide")
 
 user = require_auth()
+inject_theme_css()
 inject_global_css()
 render_sidebar()
 page_header("Training Records", "Staff competency and training compliance", "🎓")
