@@ -3,30 +3,33 @@ from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from jose import JWTError, jwt
-from passlib.context import CryptContext
 
 from app.config import settings
 
 logger = logging.getLogger(__name__)
 
+# Fix bcrypt 4.x + passlib compatibility
 try:
-    import bcrypt
-    if not hasattr(bcrypt, '__about__'):
-        bcrypt.__about__ = type('about', (), {'__version__': bcrypt.__version__})()
+    import bcrypt as _bcrypt
+    if not hasattr(_bcrypt, '__about__'):
+        _bcrypt.__about__ = type('a', (), {'__version__': _bcrypt.__version__})()
 except Exception:
     pass
 
+from passlib.context import CryptContext
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def hash_password(plain: str) -> str:
-    plain_bytes = plain.encode("utf-8")[:72]
-    return pwd_context.hash(plain_bytes.decode("utf-8", errors="ignore"))
+    import bcrypt as _bcrypt
+    pw = plain.encode("utf-8")[:72]
+    return _bcrypt.hashpw(pw, _bcrypt.gensalt()).decode("utf-8")
 
 
 def verify_password(plain: str, hashed: str) -> bool:
-    plain_bytes = plain.encode("utf-8")[:72]
-    return pwd_context.verify(plain_bytes.decode("utf-8", errors="ignore"), hashed)
+    import bcrypt as _bcrypt
+    pw = plain.encode("utf-8")[:72]
+    return _bcrypt.checkpw(pw, hashed.encode("utf-8"))
 
 
 def create_access_token(data: dict[str, Any], expires_minutes: int | None = None) -> str:
