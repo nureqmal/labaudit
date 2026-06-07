@@ -6,6 +6,7 @@ from datetime import date, timedelta
 
 from components.auth_guard import require_auth
 from components.sidebar import render_sidebar
+from components.theme import inject_theme_css
 from components.ui_helpers import (
     inject_global_css, page_header, empty_state,
     search_filter_bar, alert_banner,
@@ -19,6 +20,7 @@ from app.repositories.calibration_repository import CalibrationRepository
 st.set_page_config(page_title="Calibrations — LabAudit", page_icon="⚙️", layout="wide")
 
 user = require_auth()
+inject_theme_css()
 inject_global_css()
 render_sidebar()
 page_header("Calibrations", "Equipment calibration status and schedule", "⚙️")
