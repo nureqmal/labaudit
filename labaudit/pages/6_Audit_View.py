@@ -292,3 +292,35 @@ if st.button("🔄 Refresh View", key="audit_refresh"):
     st.rerun()
 
 st.caption(f"Compliance data as of {date.today().strftime('%d %B %Y')}.")
+
+# ── Export PDF ────────────────────────────────────────────────────────────────
+st.divider()
+st.markdown("#### 📄 Export Audit Report")
+col_exp1, col_exp2 = st.columns([2, 3])
+with col_exp1:
+    if st.button("📥 Generate PDF Report", type="primary", key="gen_pdf"):
+        with st.spinner("Generating PDF report..."):
+            try:
+                from components.auth_guard import current_user
+                u = current_user()
+                pdf_bytes = generate_audit_report(
+                    report=report,
+                    org_name="Nexus Food Analytics Sdn Bhd",
+                    generated_by=u.full_name,
+                )
+                st.session_state["pdf_bytes"] = pdf_bytes
+                st.success("✅ PDF ready! Click download below.")
+            except Exception as e:
+                st.error(f"Failed to generate PDF: {e}")
+
+if "pdf_bytes" in st.session_state:
+    with col_exp2:
+        filename = f"LabAudit_Report_{date.today().strftime('%Y%m%d')}.pdf"
+        st.download_button(
+            label="⬇️ Download PDF Report",
+            data=st.session_state["pdf_bytes"],
+            file_name=filename,
+            mime="application/pdf",
+            key="download_pdf",
+        )
+        st.caption(f"Report generated for audit review — {date.today().strftime('%d %B %Y')}")
