@@ -19,6 +19,7 @@ from app.repositories.document_repository import DocumentRepository
 from app.repositories.calibration_repository import CalibrationRepository
 from app.repositories.training_repository import TrainingRepository
 from app.repositories.capa_repository import CapaRepository
+from app.services.pdf_service import generate_audit_report
 
 st.set_page_config(page_title="Audit View — LabAudit", page_icon="✅", layout="wide")
 
@@ -315,6 +316,7 @@ with col_exp1:
 
 if "pdf_bytes" in st.session_state:
     with col_exp2:
+        from datetime import date
         filename = f"LabAudit_Report_{date.today().strftime('%Y%m%d')}.pdf"
         st.download_button(
             label="⬇️ Download PDF Report",
@@ -323,4 +325,4 @@ if "pdf_bytes" in st.session_state:
             mime="application/pdf",
             key="download_pdf",
         )
-        st.caption(f"Report generated for audit review — {date.today().strftime('%d %B %Y')}")
+        st.caption(f"Report generated — {date.today().strftime('%d %B %Y')}")
