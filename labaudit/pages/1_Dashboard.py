@@ -11,6 +11,7 @@ from datetime import date, timedelta
 from components.auth_guard import require_auth
 from components.sidebar import render_sidebar
 from components.score_card import render_score_gauge, render_pillar_cards
+from components.theme import inject_theme_css
 from components.ui_helpers import (
     inject_global_css, page_header, metric_card,
     metric_card_danger, section_header, empty_state, alert_banner,
@@ -28,6 +29,7 @@ st.set_page_config(
 
 # ── Auth + layout setup ───────────────────────────────────────────────────────
 user = require_auth()
+inject_theme_css()
 inject_global_css()
 render_sidebar()
 page_header("Dashboard", "Real-time audit readiness overview", "📊")
