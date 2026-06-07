@@ -9,20 +9,25 @@ from app.config import settings
 
 logger = logging.getLogger(__name__)
 
+try:
+    import bcrypt
+    if not hasattr(bcrypt, '__about__'):
+        bcrypt.__about__ = type('about', (), {'__version__': bcrypt.__version__})()
+except Exception:
+    pass
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-# ─── Password ─────────────────────────────────────────────────────────────────
-
 def hash_password(plain: str) -> str:
-    return pwd_context.hash(plain)
+    plain_bytes = plain.encode("utf-8")[:72]
+    return pwd_context.hash(plain_bytes.decode("utf-8", errors="ignore"))
 
 
 def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain, hashed)
+    plain_bytes = plain.encode("utf-8")[:72]
+    return pwd_context.verify(plain_bytes.decode("utf-8", errors="ignore"), hashed)
 
-
-# ─── JWT ──────────────────────────────────────────────────────────────────────
 
 def create_access_token(data: dict[str, Any], expires_minutes: int | None = None) -> str:
     payload = data.copy()
