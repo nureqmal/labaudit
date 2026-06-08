@@ -22,7 +22,7 @@ def render_score_gauge(report: AuditReadinessReport) -> None:
         value=score,
         number={"suffix": "%", "font": {"size": 52, "color": colour, "family": "Inter"}},
         gauge={
-            "axis": {"range": [0, 100], "tickwidth": 0, "tickcolor": "transparent",
+            "axis": {"range": [0, 100], "tickwidth": 0, "tickcolor": "rgba(0,0,0,0)",
                      "tickfont": {"size": 0}},
             "bar":  {"color": colour, "thickness": 0.22},
             "bgcolor": "rgba(0,0,0,0)",
